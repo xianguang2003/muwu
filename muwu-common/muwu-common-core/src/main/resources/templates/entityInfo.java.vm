@@ -1,0 +1,48 @@
+package ${cfg.dtoPackage}.${lowerTableName};
+
+#if(${swagger2})
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+#end
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+
+/**
+ * <p>
+ * $!{table.comment}
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Data
+@EqualsAndHashCode(callSuper = false)
+#if(${swagger2})
+@ApiModel(value="${tableName}Info对象", description="$!{table.comment}")
+#end
+public class ${tableName}Info implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Long id;
+## ----------  BEGIN 字段循环遍历  ----------
+#foreach($field in ${table.fields})
+
+#if(${field.keyFlag})
+#set($keyPropertyName=${field.propertyName})
+#end
+#if("$!field.comment" != "")
+  #if(${swagger2})
+    @ApiModelProperty(value = "${field.comment}")
+  #else
+    /**
+     * ${field.comment}
+     */
+  #end
+#end
+    private ${field.propertyType} ${field.propertyName};
+#end
+## ----------  END 字段循环遍历  ----------
+}

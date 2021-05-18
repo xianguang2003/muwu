@@ -1,0 +1,147 @@
+package ${package.ServiceImpl};
+
+import ${package.Entity}.${entity};
+import ${package.Mapper}.${table.mapperName};
+import ${package.Service}.${table.serviceName};
+import ${superServiceImplClassPackage};
+#if(${cfg.rpcService} && !$entity.contains("Relation"))
+
+import java.util.List;
+
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fanmu.muwu.common.base.enums.ErrorCodeEnum;
+import com.fanmu.muwu.common.base.enums.GlobalStatusEnum;
+import com.fanmu.muwu.common.base.pojo.BaseDTO;
+import com.fanmu.muwu.common.coer.util.MyBatisUtil;
+import com.fanmu.muwu.service.provider.${module}.api.exceptions.${firstUpperModule}BizException;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
+import ${cfg.rpcServiceImplClassPackage}.${entity}RpcApi;
+import ${cfg.dtoPackage}.${lowerTableName}.${tableName}Info;
+import ${cfg.queryPackage}.${lowerTableName}.Query${tableName};
+import org.apache.dubbo.config.annotation.DubboService;
+#else
+import org.springframework.stereotype.Service;
+#end
+
+
+/**
+ * <p>
+ * $!{table.comment} 服务实现类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${kotlin})
+open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>(), ${table.serviceName} {
+
+}
+#elseif(${cfg.rpcService} && !$entity.contains("Relation"))
+@DubboService(interfaceClass = ${entity}RpcApi.class)
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+
+    @Override
+    public void insert${tableName}(${tableName}Info ${firstLowerTableName}Info) {
+##        ${entity} ${firstLowerTableName} = super.getOne(Wrappers.lambdaQuery(${entity}.class).eq(${entity}::get${tableName}Code, ${firstLowerTableName}Info.get${tableName}Code()));
+##        if (${firstLowerTableName} != null) {
+##            throw new ${firstUpperModule}BizException(ErrorCodeEnum.GL10000003, ${firstLowerTableName}.getId());
+##        }
+##        ${firstLowerTableName} = new ${entity}();
+        ${entity} ${firstLowerTableName} = new ${entity}();
+        BeanUtil.copyProperties(${firstLowerTableName}Info, ${firstLowerTableName});
+        super.save(${firstLowerTableName});
+    }
+
+    @Override
+    public void delete${tableName}ById(Long id) {
+        Preconditions.checkArgument(id != null, ErrorCodeEnum.GL10000001.msg());
+
+        super.removeById(id);
+    }
+
+    @Override
+    public void update${tableName}(${tableName}Info ${firstLowerTableName}Info) {
+        Preconditions.checkArgument(${firstLowerTableName}Info.getId() != null, ErrorCodeEnum.GL10000001.msg());
+        ${entity} ${firstLowerTableName} = super.getById(${firstLowerTableName}Info.getId());
+        if (${firstLowerTableName} == null) {
+            throw new ${firstUpperModule}BizException(ErrorCodeEnum.GL10000002, ${firstLowerTableName}.getId());
+        }
+        // 修改数据
+        ${firstLowerTableName} = new ${entity}();
+        BeanUtil.copyProperties(${firstLowerTableName}Info, ${firstLowerTableName});
+        super.updateById(${firstLowerTableName});
+    }
+
+    @Override
+    public ${tableName}Info get${tableName}ById(Long id) {
+        ${entity} ${firstLowerTableName} = super.getById(id);
+        if (${firstLowerTableName} == null) {
+            throw new ${firstUpperModule}BizException(ErrorCodeEnum.GL10000002, id);
+        }
+
+        ${tableName}Info ${firstLowerTableName}Info = new ${tableName}Info();
+        BeanUtil.copyProperties(${firstLowerTableName}, ${firstLowerTableName}Info);
+        return ${firstLowerTableName}Info;
+    }
+
+    @Override
+    public List<${tableName}Info> list${tableName}() {
+        return list${tableName}(null);
+    }
+
+    @Override
+    public List<${tableName}Info> list${tableName}(Query${tableName} query${tableName}) {
+        LambdaQueryWrapper<${entity}> ${firstLowerTableName}QueryWrapper = Wrappers.lambdaQuery();
+        if (query${tableName} != null) {
+            if (StringUtils.isNotEmpty(query${tableName}.getKeyword())) {
+    ##            ${firstLowerTableName}QueryWrapper.eq(${entity}::getStatus, ${entity}StatusEnum.ENABLE.getStatus())
+                ${firstLowerTableName}QueryWrapper.eq(${entity}::getStatus, GlobalStatusEnum.ENABLE.getStatus())
+                        .like(${entity}::get${tableName}Name, query${tableName}.getKeyword());
+##                        .or().like(${entity}::get${tableName}Code, query${tableName}.getKeyword());
+            }
+        }
+        List<${entity}> ${firstLowerTableName}s = super.list(${firstLowerTableName}QueryWrapper);
+        List<${tableName}Info> ${firstLowerTableName}Infos = Lists.newArrayList();
+        ${firstLowerTableName}s.forEach(${firstLowerTableName} -> {
+            ${tableName}Info ${firstLowerTableName}Info = new ${tableName}Info();
+            BeanUtil.copyProperties(${firstLowerTableName}, ${firstLowerTableName}Info);
+            ${firstLowerTableName}Infos.add(${firstLowerTableName}Info);
+        });
+        return ${firstLowerTableName}Infos;
+    }
+
+    @Override
+    public BaseDTO<${tableName}Info> list${tableName}Page(Query${tableName} query${tableName}) {
+        Page page = MyBatisUtil.page(query${tableName});
+        LambdaQueryWrapper<${entity}> ${firstLowerTableName}QueryWrapper = Wrappers.lambdaQuery();
+##        ${firstLowerTableName}QueryWrapper.eq(${entity}::getStatus, GlobalStatusEnum.ENABLE.getStatus());
+        if (StringUtils.isNotEmpty(query${tableName}.getKeyword())) {
+##            ${firstLowerTableName}QueryWrapper.eq(${entity}::getStatus, ${entity}StatusEnum.ENABLE.getStatus())
+            ${firstLowerTableName}QueryWrapper.like(${entity}::get${tableName}Name, query${tableName}.getKeyword());
+##                    .or().like(${entity}::get${tableName}Code, query${tableName}.getKeyword());
+        }
+        IPage<${entity}> ${firstLowerTableName}IPage = super.page(page, ${firstLowerTableName}QueryWrapper);
+
+        BaseDTO<${tableName}Info> baseDTO = MyBatisUtil.returnPage(${firstLowerTableName}IPage);
+        List<${tableName}Info> ${firstLowerTableName}Infos = Lists.newArrayList();
+        baseDTO.setData(${firstLowerTableName}Infos);
+        ${firstLowerTableName}IPage.getRecords().forEach(${firstLowerTableName} -> {
+            ${tableName}Info ${firstLowerTableName}Info = new ${tableName}Info();
+            BeanUtil.copyProperties(${firstLowerTableName}, ${firstLowerTableName}Info);
+            ${firstLowerTableName}Infos.add(${firstLowerTableName}Info);
+        });
+        return baseDTO;
+    }
+
+}
+#else
+@Service
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+
+}
+#end

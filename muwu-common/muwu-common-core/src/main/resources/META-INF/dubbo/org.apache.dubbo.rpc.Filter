@@ -1,0 +1,2 @@
+platformdubbogetuserinfo=com.fanmu.muwu.common.coer.filter.PlatformDubboGetUserInfoFilter
+platformdubboadduserinfo=com.fanmu.muwu.common.coer.filter.PlatformDubboAddUserInfoFilter

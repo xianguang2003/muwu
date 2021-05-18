@@ -1,0 +1,46 @@
+import request from "@/utils/request";
+
+export function query${tableName}sPage(data) {
+  return request({
+    url: "muwu-web-api/${module}/${firstLowerTableName}/query${tableName}sPage",
+    method: "post",
+    data
+  });
+}
+
+export function add${tableName}(data) {
+  return request({
+    url: "muwu-web-api/${module}/${firstLowerTableName}/add${tableName}",
+    method: "post",
+    data
+  });
+}
+
+export function update${tableName}(data) {
+  return request({
+    url: "muwu-web-api/${module}/${firstLowerTableName}/update${tableName}",
+    method: "post",
+    data
+  });
+}
+
+export function delete${tableName}(${firstLowerTableName}Id) {
+  return request({
+    url: "muwu-web-api/${module}/${firstLowerTableName}/delete${tableName}/" + ${firstLowerTableName}Id,
+    method: "post"
+  });
+}
+
+export function get${tableName}(${firstLowerTableName}Id) {
+  return request({
+    url: "muwu-web-api/${module}/${firstLowerTableName}/get${tableName}/" + ${firstLowerTableName}Id,
+    method: "post"
+  });
+}
+
+export function list${tableName}() {
+  return request({
+    url: "muwu-web-api/${module}/${firstLowerTableName}/list${tableName}",
+    method: "post"
+  });
+}

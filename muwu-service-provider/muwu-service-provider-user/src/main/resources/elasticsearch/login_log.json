@@ -1,0 +1,118 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": "5",
+      "number_of_replicas": "0",
+      "max_result_window": "100000"
+    }
+  },
+  "mappings": {
+    "properties": {
+      "country": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "os": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "city": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "login_type": {
+        "type": "keyword"
+      },
+      "ip": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "description": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "terminal": {
+        "type": "keyword"
+      },
+      "type": {
+        "type": "keyword"
+      },
+      "province": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "login_time": {
+        "type": "date"
+      },
+      "browser": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "location": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "_class": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      },
+      "status": {
+        "type": "short"
+      },
+      "username": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "ignore_above": 256,
+            "type": "keyword"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,186 @@
+<template>
+  <div class="app-container">
+    <div class="filter-container">
+      <el-input v-model="listQuery.keyword" placeholder="关键字" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-button v-waves class="filter-item" style="margin-left: 60px;" type="primary" icon="el-icon-search" @click="handleFilter">
+        查询
+      </el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+        添加$!{table.comment}
+      </el-button>
+    </div>
+
+    <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit highlight-current-row>
+      <el-table-column align="ID" label="ID" width="95">
+        <template slot-scope="scope">
+          {{ scope.row.id }}
+        </template>
+      </el-table-column>
+      <el-table-column label="$!{table.comment}名称" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.${firstLowerTableName}Name }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button type="text" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button type="text" @click="handleDelete(scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="query${tableName}sPage" />
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" :rules="rules" :model="${firstLowerTableName}Info" label-position="left" label-width="90px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="$!{table.comment}名称" prop="${firstLowerTableName}Name">
+          <el-input v-model="${firstLowerTableName}Info.${firstLowerTableName}Name" placeholder="$!{table.comment}名称" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?create${tableName}():update${tableName}()">
+          提交
+        </el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { query${tableName}sPage, add${tableName}, update${tableName}, delete${tableName} } from '@/api/${module}/${firstLowerTableName}'
+import waves from '@/directive/waves' // waves directive
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+
+export default {
+  components: { Pagination },
+  directives: { waves },
+  filters: {
+    statusFilter (status) {
+      const statusMap = {
+        published: 'success',
+        draft: 'gray',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    }
+  },
+  data () {
+    return {
+      list: null,
+      listLoading: true,
+      total: 0,
+      listQuery: {
+        pageNum: 1,
+        pageSize: 10,
+        sort: undefined,
+        keyword: undefined
+      },
+      ${firstLowerTableName}Info: {
+        id: undefined,
+        ${firstLowerTableName}Name: undefined
+      },
+      textMap: {
+        update: '修改$!{table.comment}',
+        create: '创建$!{table.comment}'
+      },
+      dialogStatus: '',
+      dialogFormVisible: false,
+      statusOptions: undefined,
+      rules: {
+        ${firstLowerTableName}Name: [{ required: true, message: '请填写名称', trigger: 'blur' }]
+      }
+    }
+  },
+  created () {
+    this.query${tableName}sPage()
+  },
+  methods: {
+    query${tableName}sPage () {
+      this.listLoading = true
+      query${tableName}sPage(this.listQuery).then(response => {
+        this.list = response.result.data
+        this.total = response.result.total
+        this.listLoading = false
+      })
+    },
+    handleFilter () {
+      this.listQuery.pageNum = 1
+      this.query${tableName}sPage()
+    },
+    clear${tableName}Info () {
+      this.${firstLowerTableName}Info = {
+        id: undefined,
+        ${firstLowerTableName}Name: undefined
+      }
+    },
+    handleCreate () {
+      this.clear${tableName}Info()
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    create${tableName} () {
+##      this.$refs['dataForm'].validate((valid) => {
+##        if (valid) {
+##          add${tableName}(this.${firstLowerTableName}Info).then(response => {
+##            this.dialogFormVisible = false
+##            if (response.code === 200) {
+##              this.$notify({
+##                title: '成功',
+##                message: '创建$!{table.comment}成功',
+##                type: 'success'
+##              })
+##              // 刷新当前页面
+##              this.query${tableName}sPage()
+##            }
+##          })
+##        }
+##      })
+    },
+    handleUpdate (row) {
+      this.${firstLowerTableName}Info = Object.assign({}, row) // copy obj
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    update${tableName} () {
+##      this.$refs['dataForm'].validate((valid) => {
+##        if (valid) {
+##          update${tableName}(this.${firstLowerTableName}Info).then(response => {
+##            this.dialogFormVisible = false
+##            if (response.code === 200) {
+##              this.$notify({
+##                title: '成功',
+##                message: '编辑$!{table.comment}成功',
+##                type: 'success'
+##              })
+##              // 刷新当前页面
+##              this.query${tableName}sPage()
+##            }
+##          })
+##        }
+##      })
+    },
+    handleDelete (id) {
+      delete${tableName}(id).then(response => {
+        if (response.code === 200) {
+          this.$notify({
+            title: '成功',
+            message: '删除$!{table.comment}成功',
+            type: 'success'
+          })
+          // 刷新当前页面
+          this.query${tableName}sPage()
+        }
+      })
+    }
+  }
+}
+</script>

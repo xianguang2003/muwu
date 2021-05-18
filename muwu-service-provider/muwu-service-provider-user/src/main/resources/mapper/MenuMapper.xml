@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fanmu.muwu.service.provider.user.mapper.MenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fanmu.muwu.service.provider.user.model.domain.Menu">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="creator" property="creator" />
+        <result column="creator_id" property="creatorId" />
+        <result column="update_time" property="updateTime" />
+        <result column="last_operator" property="lastOperator" />
+        <result column="last_operator_id" property="lastOperatorId" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="menu_name" property="menuName" />
+        <result column="menu_code" property="menuCode" />
+        <result column="url" property="url" />
+        <result column="component" property="component" />
+        <result column="parent_id" property="parentId" />
+        <result column="number" property="number" />
+        <result column="status" property="status" />
+        <result column="hidden" property="hidden" />
+        <result column="remark" property="remark" />
+        <result column="icon" property="icon" />
+        <result column="level" property="level" />
+        <result column="leaf" property="leaf" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        create_time,
+        creator,
+        creator_id,
+        update_time,
+        last_operator,
+        last_operator_id,
+        is_deleted,
+        menu_name, menu_code, url, component, parent_id, number, status, hidden, remark, icon, level, leaf
+    </sql>
+
+</mapper>

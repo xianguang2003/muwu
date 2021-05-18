@@ -1,0 +1,14 @@
+{
+  "redis_ip": "172.16.34.85",
+  "redis_port": 6379,
+  "redis_password": "",
+  "redis_db_index": 1,
+  "redis_timeout": 10,
+  "redis_pool_max_idle_time": 60,
+  "redis_pool_size": 200,
+  "verify_token_mode": "redis",
+  "jwt_secret": "muwu",
+  "oauth_domain": "http://172.16.34.85:8090",
+  "check_token": "/muwu-auth/oauth/check_token",
+  "get_user_info": "/muwu-auth/auth/getUserInfo"
+}

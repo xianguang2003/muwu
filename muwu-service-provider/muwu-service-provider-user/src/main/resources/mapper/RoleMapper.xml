@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fanmu.muwu.service.provider.user.mapper.RoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fanmu.muwu.service.provider.user.model.domain.Role">
+        <result column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="creator" property="creator"/>
+        <result column="creator_id" property="creatorId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="last_operator" property="lastOperator"/>
+        <result column="last_operator_id" property="lastOperatorId"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="role_name" property="roleName"/>
+        <result column="role_code" property="roleCode"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <resultMap id="RolePermissionMap" type="com.fanmu.muwu.service.provider.user.model.expand.RolePermission">
+        <result column="role_code" property="roleCode"/>
+        <collection column="menu_url" property="menuUrl" ofType="java.lang.String">
+            <result column="menu_url"/>
+        </collection>
+        <collection column="element_url" property="elementUrl" ofType="java.lang.String">
+            <result column="element_url"/>
+        </collection>
+        <collection column="permission_url" property="permissionUrl" ofType="java.lang.String">
+            <result column="permission_url"/>
+        </collection>
+        <collection column="menu_permission_url" property="menuPermissionUrl" ofType="java.lang.String">
+            <result column="menu_permission_url"/>
+        </collection>
+        <collection column="element_permission_url" property="elementPermissionUrl" ofType="java.lang.String">
+            <result column="element_permission_url"/>
+        </collection>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        create_time,
+        creator,
+        creator_id,
+        update_time,
+        last_operator,
+        last_operator_id,
+        is_deleted,
+        role_name, role_code, status, remark
+    </sql>
+
+    <select id="listRolePermissionUri" resultMap="RolePermissionMap">
+        SELECT
+            ur.role_code,
+            um.url AS menu_url,
+            ue.url AS element_url,
+            up.url AS permission_url,
+            upm.url AS menu_permission_url,
+            upe.url AS element_permission_url
+        FROM
+            mw_role ur
+        <!-- 菜单 -->
+        LEFT JOIN mw_role_menu_relation urmr ON ur.id = urmr.role_id
+        LEFT JOIN mw_menu um ON urmr.menu_id = um.id AND um.is_deleted = 0 AND um.`status` = 0
+        <!-- 页面元素 -->
+        LEFT JOIN mw_role_element_relation urer ON ur.id = urer.role_id
+        LEFT JOIN mw_element ue ON urer.element_id = ue.id AND ue.is_deleted = 0 AND ue.`status` = 0
+        <!-- 权限 -->
+        LEFT JOIN mw_role_permission_relation urpr ON ur.id = urpr.role_id
+        LEFT JOIN mw_permission up ON urpr.permission_id = up.id AND up.is_deleted = 0 AND up.`status` = 0
+        <!-- 菜单权限 -->
+        LEFT JOIN mw_menu_permission_relation upmr ON um.id = upmr.menu_id
+        LEFT JOIN mw_permission upm ON upmr.permission_id = upm.id AND upm.is_deleted = 0 AND upm.`status` = 0
+        <!-- 页面权限 -->
+        LEFT JOIN mw_element_permission_relation uper ON ue.id = uper.element_id
+        LEFT JOIN mw_permission upe ON uper.permission_id = upe.id AND upe.is_deleted = 0 AND upe.`status` = 0
+        WHERE
+            ur.is_deleted = 0
+        <if test="roleCode != null">
+            AND ur.role_code = #{roleCode}
+        </if>
+    </select>
+</mapper>

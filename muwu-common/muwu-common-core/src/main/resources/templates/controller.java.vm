@@ -1,0 +1,72 @@
+package ${cfg.controllerPackage};
+
+import com.fanmu.muwu.common.base.pojo.BaseDTO;
+import com.fanmu.muwu.common.web.extension.wrapper.WrapMapper;
+import com.fanmu.muwu.common.web.extension.wrapper.Wrapper;
+import ${cfg.rpcServiceImplClassPackage}.${entity}RpcApi;
+import ${cfg.dtoPackage}.${lowerTableName}.${tableName}Info;
+import ${cfg.queryPackage}.${lowerTableName}.Query${tableName};
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@RestController
+@RequestMapping(value = "/${module}/${firstLowerTableName}", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "Web - ${entity}Controller", tags = {"$!{table.comment}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+public class ${table.controllerName} {
+
+    @DubboReference
+    ${entity}RpcApi ${firstLowerTableName}RpcApi;
+
+    @PostMapping(value = "/add${tableName}")
+    @ApiOperation(value = "添加$!{table.comment}")
+    public Wrapper add${tableName}(@RequestBody ${tableName}Info ${firstLowerTableName}Info) {
+        ${firstLowerTableName}RpcApi.insert${tableName}(${firstLowerTableName}Info);
+        return WrapMapper.ok();
+    }
+
+    @PostMapping(value = "/delete${tableName}/{${firstLowerTableName}Id}")
+    @ApiOperation(value = "删除$!{table.comment}")
+    public Wrapper delete${tableName}(@PathVariable("${firstLowerTableName}Id") Long ${firstLowerTableName}Id) {
+        ${firstLowerTableName}RpcApi.delete${tableName}ById(${firstLowerTableName}Id);
+        return WrapMapper.ok();
+    }
+
+    @PostMapping(value = "/update${tableName}")
+    @ApiOperation(value = "更新$!{table.comment}")
+    public Wrapper update${tableName}(@RequestBody ${tableName}Info ${firstLowerTableName}Info) {
+        ${firstLowerTableName}RpcApi.update${tableName}(${firstLowerTableName}Info);
+        return WrapMapper.ok();
+    }
+
+    @PostMapping(value = "/get${tableName}/{${firstLowerTableName}Id}")
+    @ApiOperation(value = "获取$!{table.comment}")
+    public Wrapper<${tableName}Info> get${tableName}(@PathVariable("${firstLowerTableName}Id") Long ${firstLowerTableName}Id) {
+        return WrapMapper.ok(${firstLowerTableName}RpcApi.get${tableName}ById(${firstLowerTableName}Id));
+    }
+
+    @PostMapping(value = "/list${tableName}")
+    @ApiOperation(value = "列表$!{table.comment}")
+    public Wrapper<List<${tableName}Info>> list${tableName}(@RequestBody(required = false) Query${tableName} query${tableName}) {
+        return WrapMapper.ok(${firstLowerTableName}RpcApi.list${tableName}(query${tableName}));
+    }
+
+    @PostMapping(value = "/query${tableName}sPage")
+    @ApiOperation(value = "查询$!{table.comment}")
+    public Wrapper<BaseDTO<${tableName}Info>> query${tableName}sPage(@RequestBody Query${tableName} query${tableName}) {
+        return WrapMapper.ok(${firstLowerTableName}RpcApi.list${tableName}Page(query${tableName}));
+    }
+
+}

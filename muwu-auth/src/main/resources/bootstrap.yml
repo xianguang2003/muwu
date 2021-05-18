@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: @pom.artifactId@
+#    name: muwu-auth
+#  cloud:
+#    nacos:
+#      config:
+#        server-addr: 172.16.34.85:8848
+#        group: MUWU_GROUP
+#        file-extension: yml

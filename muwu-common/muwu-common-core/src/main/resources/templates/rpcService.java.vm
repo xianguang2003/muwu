@@ -1,0 +1,22 @@
+package ${cfg.rpcServicePackage};
+
+import ${cfg.rpcServiceImplClassPackage}.${entity}RpcApi;
+import ${package.ServiceImpl}.${table.serviceImplName};
+import org.apache.dubbo.config.annotation.DubboService;
+
+/**
+ * <p>
+ * $!{table.comment} rpc服务实现类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@DubboService
+#if(${kotlin})
+open class ${entity}Rpc : ${entity}ServiceImpl, ${entity}RpcApi
+#else
+public class ${entity}Rpc extends ${entity}ServiceImpl implements ${entity}RpcApi {
+
+}
+#end

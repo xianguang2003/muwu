@@ -1,0 +1,36 @@
+package ${cfg.rpcServiceImplClassPackage};
+
+import com.fanmu.muwu.common.base.pojo.BaseDTO;
+import ${cfg.dtoPackage}.${lowerTableName}.${tableName}Info;
+import ${cfg.queryPackage}.${lowerTableName}.Query${tableName};
+
+import java.util.List;
+/**
+ * <p>
+ * $!{table.comment} rpc服务类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${kotlin})
+interface ${entity}RpcApi
+#else
+public interface ${entity}RpcApi {
+
+    void insert${tableName}(${tableName}Info ${firstLowerTableName}Info);
+
+    void delete${tableName}ById(Long id);
+
+    void update${tableName}(${tableName}Info ${firstLowerTableName}Info);
+
+    ${tableName}Info get${tableName}ById(Long id);
+
+    List<${tableName}Info> list${tableName}();
+
+    List<${tableName}Info> list${tableName}(Query${tableName} query${tableName});
+
+    BaseDTO<${tableName}Info> list${tableName}Page(Query${tableName} query${tableName});
+
+}
+#end

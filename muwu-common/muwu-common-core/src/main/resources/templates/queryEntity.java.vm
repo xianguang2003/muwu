@@ -1,0 +1,32 @@
+package ${cfg.queryPackage}.${lowerTableName};
+
+import com.fanmu.muwu.common.base.pojo.BaseQuery;
+#if(${swagger2})
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+#end
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Builder;
+
+/**
+ * <p>
+ * $!{table.comment}
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Data
+@Builder
+@EqualsAndHashCode(callSuper = false)
+#if(${swagger2})
+@ApiModel(value="Query${tableName}对象", description="$!{table.comment}")
+#end
+public class Query${tableName} extends BaseQuery {
+
+    private Long id;
+
+    private String keyword;
+
+}

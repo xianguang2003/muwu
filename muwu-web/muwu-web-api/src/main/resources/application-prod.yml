@@ -1,0 +1,43 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /muwu-web-api
+
+dubbo:
+  application:
+    id: @pom.artifactId@
+    name: @pom.artifactId@
+  scan:
+    base-packages: com.fanmu.muwu.web.api.controller # Dubbo 服务实现类的扫描基准包
+  config-center:
+    address: zookeeper://127.0.0.1:2181
+    timeout: 30000
+  metadata-report:
+    address: zookeeper://127.0.0.1:2181
+    timeout: 30000
+  registry: # Dubbo 服务注册中心配置, 对应 RegistryConfig 类
+    address: zookeeper://127.0.0.1:2181
+    timeout: 30000
+  consumer: # Dubbo 消费端配置
+    check: false
+    filter: platformdubboadduserinfo, -exception
+
+spring:
+  mvc:
+    format:
+      date: yyyy-MM-dd HH:mm:ss
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+muwu:
+  security:
+    oauth2:
+      ignore:
+        urls:
+          - /uc/menu/listMenuTree
+  oss:
+    endpoint: http://oss-cn-beijing.aliyuncs.com
+    accessKeyId: LTAIMPGpaPL6FhIO
+    accessKeySecret: 0QbSTevPVSpJRvZI9kHAZEcdss6KTN
+    bucketName: fanmu
+    globalPath: http://fanmu.oss-cn-beijing.aliyuncs.com/
